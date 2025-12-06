@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Entry_Point">
+      <UniqueIdentifier>{9683e281-8f2a-4eea-8a4f-a14613d1ad45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes">
+      <UniqueIdentifier>{fbbb3cf6-be16-434c-b56f-832b4f995978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Apex/Essentials">
+      <UniqueIdentifier>{9242e63e-9b11-460a-910c-591ad0ff6345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Set_Theory">
+      <UniqueIdentifier>{c368710f-37ef-4e32-aae8-e3516df1f203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Functions_And_Relations">
+      <UniqueIdentifier>{4de7b11a-37eb-4b21-85dd-6be6803cb563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Graph_Theory">
+      <UniqueIdentifier>{f5115af4-d5b2-4d33-8cda-745357944180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Functions_And_Relations\Function_Theory">
+      <UniqueIdentifier>{8375bc30-7b60-4db3-9d63-7ed4b9ede1ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Functions_And_Relations\Relation_Theory">
+      <UniqueIdentifier>{40918162-fd63-49ea-89f7-2605b7e36d87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Apex/Essentials\Core">
+      <UniqueIdentifier>{6231e091-d86b-4c18-9c25-c0a23cd64fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Includes\Apex/Essentials\Intergeration_Module">
+      <UniqueIdentifier>{045704ed-3eb1-42d5-907f-37a80ec21328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tests">
+      <UniqueIdentifier>{7fe96a72-8a81-4d0f-b680-d3f9068c373d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\Entry_Point</Filter>
+    </ClCompile>
+    <ClCompile Include="tests.cpp">
+      <Filter>Source Files\Tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Data_Registery.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+    <ClInclude Include="DMSA_Controller.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+    <ClInclude Include="File_IO_Manager.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Type_Systems.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Source Files\Includes\Functions_And_Relations\Function_Theory</Filter>
+    </ClInclude>
+    <ClInclude Include="Relations.h">
+      <Filter>Source Files\Includes\Functions_And_Relations\Relation_Theory</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Source Files\Includes\Graph_Theory</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph_Utility.h">
+      <Filter>Source Files\Includes\Graph_Theory</Filter>
+    </ClInclude>
+    <ClInclude Include="Math_Set.h">
+      <Filter>Source Files\Includes\Set_Theory</Filter>
+    </ClInclude>
+    <ClInclude Include="Quantifier_Validator.h">
+      <Filter>Source Files\Includes\Set_Theory</Filter>
+    </ClInclude>
+    <ClInclude Include="Critical_Node_Generator.h">
+      <Filter>Source Files\Includes\Set_Theory</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

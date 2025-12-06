@@ -1,0 +1,226 @@
+==============================================================================
+
+MEGA RIGOROUS DMSA SYSTEM TEST SUITE
+
+Focus: Axiomatic Laws, Degenerate Cases, Vacuous Truths, and Pathological Inputs
+
+==============================================================================
+
+OPERATION: #DISPLAY_DEFINED
+
+==============================================================================
+
+1. FOUNDATIONAL DATA (The Void & The Universe)
+
+==============================================================================
+
+#DEFINE_SET: E_Int
+Type: INT
+Data: {}
+
+#DEFINE_SET: E_Str
+Type: STRING
+Data: {}
+
+#DEFINE_SET: E_Char
+Type: CHAR
+Data: {}
+
+#DEFINE_SET: S_Zero
+Type: INT
+Data: {0}
+
+#DEFINE_SET: S_NullStr
+Type: STRING
+Data: {""}
+
+#DEFINE_SET: S_CharA
+Type: CHAR
+Data: {a}
+
+#DEFINE_SET: U_Int_A
+Type: INT
+Data: {1, 2, 3}
+
+#DEFINE_SET: U_Int_B
+Type: INT
+Data: {3, 4, 5}
+
+#DEFINE_SET: U_Int_C
+Type: INT
+Data: {5, 6, 7}
+
+#DEFINE_SET: U_Int_Universal
+Type: INT
+Data: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+==============================================================================
+
+2. AXIOMATIC SET THEORY VERIFICATION
+
+==============================================================================
+
+OPERATION: UNION, U_Int_A, U_Int_B
+OPERATION: UNION, U_Int_B, U_Int_A
+
+(Output should be identical)
+
+We calculate parts to verify manual trace
+
+OPERATION: UNION, U_Int_A, U_Int_B
+OPERATION: UNION, U_Int_B, U_Int_C
+
+OPERATION: UNION, U_Int_B, U_Int_C
+OPERATION: INTERSECTION, U_Int_A, U_Int_B
+OPERATION: INTERSECTION, U_Int_A, U_Int_C
+
+OPERATION: CARTESIAN_PRODUCT, U_Int_A, E_Int
+OPERATION: CARTESIAN_PRODUCT, E_Str, U_Int_B
+
+OPERATION: POWER_SET, E_Int
+
+==============================================================================
+
+3. RELATION PATHOLOGIES (The Extremes)
+
+==============================================================================
+
+#DEFINE_RELATION: R_Empty
+Type: INT
+Domain: U_Int_A
+Order_Pairs: []
+
+Checks on Empty Relation
+
+OPERATION: RELATION_CHECK, R_Empty, REFLEXIVE
+
+(False, unless domain is empty)
+
+OPERATION: RELATION_CHECK, R_Empty, SYMMETRIC
+
+(Vacuously True: For all a,b in R... there are none)
+
+OPERATION: RELATION_CHECK, R_Empty, TRANSITIVE
+
+(Vacuously True)
+
+#DEFINE_RELATION: R_Universal
+Type: INT
+Domain: S_Zero
+Order_Pairs: [(0,0)]
+
+OPERATION: RELATION_CHECK, R_Universal, EQUIVALENCE
+OPERATION: RELATION_CHECK, R_Universal, PARTIAL_ORDER
+
+#DEFINE_RELATION: R_AntiStress
+Type: INT
+Domain: U_Int_A
+Order_Pairs: [(1,2), (2,1), (1,1)]
+
+OPERATION: RELATION_CHECK, R_AntiStress, ANTISYMMETRIC
+
+(False because 1R2 and 2R1 and 1!=2)
+
+==============================================================================
+
+4. FUNCTION INVERSION & IDENTITY CRISIS
+
+==============================================================================
+
+
+#DEFINE_FUNCTION: F_Identity
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: U_Int_A
+Co_Domain: U_Int_A
+Mapping: [1->1, 2->2, 3->3]
+
+#DEFINE_FUNCTION: F_Linear
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: U_Int_A
+Co_Domain: U_Int_B
+Mapping: [1->3, 2->4, 3->5]
+
+OPERATION: INVERSE, F_Linear
+
+(Result is F_Inverse)
+
+Note: User must manually verify F_Linear o Inverse matches Identity structure in output
+
+#DEFINE_FUNCTION: F_Empty
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: E_Int
+Co_Domain: E_Int
+Mapping: []
+
+OPERATION: CHECK_FUNCTION, F_Empty, BIJECTIVE
+
+(Vacuously True for Empty Sets)
+
+==============================================================================
+
+5. GRAPH ALGORITHM EDGE CASES
+
+==============================================================================
+
+#DEFINE_GRAPH: G_Null
+Type: INT
+Vertices: U_Int_A
+Directed: FALSE
+Edges: []
+
+OPERATION: GRAPH_CHECK, G_Null, CONNECTED_COMPONENTS
+
+(Should be size of vertices, i.e., 3)
+
+
+#DEFINE_GRAPH: G_Loops
+Type: INT
+Vertices: S_Zero
+Directed: FALSE
+Edges: [(0,0,1)]
+
+OPERATION: SHORTEST_PATH, G_Loops, 0, 0
+
+(Cost should be 0)
+
+
+#DEFINE_GRAPH: G_Split
+Type: INT
+Vertices: U_Int_Universal
+Directed: FALSE
+Edges: [(1,2,1), (9,10,1)]
+
+OPERATION: SHORTEST_PATH, G_Split, 1, 10
+
+(Should return Infinity/None)
+
+OPERATION: MST, G_Split, 1
+
+(Should Fail)
+
+==============================================================================
+
+6. LOGIC: VACUOUS TRUTHS & PREDICATE STRESS
+
+==============================================================================
+
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, E_Int, IS_POSITIVE
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, E_Int, IS_ODD
+
+(Both should be TRUE)
+
+
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, E_Int, IS_POSITIVE
+
+(Should be FALSE)
+
+Are all elements in {1,2,3} LESS than all elements in {5,6,7}? (True)
+
+OPERATION: NESTED_QUANTIFIER_CHECK, ALL_ALL, U_Int_A, U_Int_C, LESS
+
+Is there an element in {1,2,3} EQUAL to {5,6,7}? (False)
+
+OPERATION: NESTED_QUANTIFIER_CHECK, EXISTS_EXISTS, U_Int_A, U_Int_C, EQUAL

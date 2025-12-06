@@ -1,0 +1,199 @@
+#DEFINE_SET: Set_Int_A
+Type: INT
+Data: {1, 2, 3, 4, 5}
+
+#DEFINE_SET: Set_Int_B
+Type: INT
+Data: {4, 5, 6, 7, 8}
+
+#DEFINE_SET: Set_Int_Disjoint
+Type: INT
+Data: {100, 101, 102}
+
+#DEFINE_SET: Set_Int_Empty
+Type: INT
+Data: {}
+
+#DEFINE_SET: Set_Int_Single
+Type: INT
+Data: {42}
+
+#DEFINE_SET: Set_Int_Neg
+Type: INT
+Data: {-5, -1, 0, 1, 5}
+
+#DEFINE_SET: high_value
+Type: INT
+Data: {1, 2, 3, 5, 8, 13, 21}
+
+#DEFINE_SET: frequently_accessed
+Type: INT
+Data: {2, 3, 5, 7, 11, 13}
+
+#DEFINE_SET: gateway
+Type: INT
+Data: {0, 100, 500}
+
+#DEFINE_SET: Set_Str_Names
+Type: STRING
+Data: {Alice, Bob, Charlie, Dave}
+
+#DEFINE_SET: Set_Str_Roles
+Type: STRING
+Data: {Admin, User, Guest}
+
+#DEFINE_SET: Set_Char_Vowels
+Type: CHAR
+Data: {A, E, I, O, U}
+
+#DEFINE_SET: Set_Char_Mix
+Type: CHAR
+Data: {A, B, C}
+
+#DEFINE_RELATION: Rel_Reflexive
+Type: INT
+Domain: Set_Int_A
+Order_Pairs: [(1,1), (2,2), (3,3), (4,4), (5,5), (1,2)]
+
+#DEFINE_RELATION: Rel_Symmetric
+Type: INT
+Domain: Set_Int_A
+Order_Pairs: [(1,2), (2,1), (3,4), (4,3)]
+
+#DEFINE_RELATION: Rel_Transitive
+Type: INT
+Domain: Set_Int_A
+Order_Pairs: [(1,2), (2,3), (1,3)]
+
+#DEFINE_RELATION: Rel_Equivalence
+Type: INT
+Domain: Set_Int_A
+Order_Pairs: [(1,1), (2,2), (3,3), (4,4), (1,3), (3,1), (2,4), (4,2)]
+
+#DEFINE_RELATION: Rel_PartialOrder
+Type: INT
+Domain: Set_Int_A
+Order_Pairs: [(1,1), (2,2), (3,3), (4,4), (5,5), (1,2), (2,3), (1,3), (3,4)]
+
+#DEFINE_RELATION: Rel_Empty
+Type: INT
+Domain: Set_Int_A
+Order_Pairs: []
+
+#DEFINE_FUNCTION: Func_Bijective
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: Set_Int_A
+Co_Domain: Set_Int_A
+Mapping: [1->2, 2->3, 3->4, 4->5, 5->1]
+
+#DEFINE_FUNCTION: Func_Constant
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: Set_Int_A
+Co_Domain: Set_Int_A
+Mapping: [1->1, 2->1, 3->1, 4->1, 5->1]
+
+#DEFINE_FUNCTION: Func_Injective
+Domain_Type: CHAR
+Co_Domain_Type: INT
+Domain: Set_Char_Mix
+Co_Domain: Set_Int_A
+Mapping: [A->1, B->2, C->3]
+
+#DEFINE_FUNCTION: F_StrToInt
+Domain_Type: STRING
+Co_Domain_Type: INT
+Domain: Set_Str_Names
+Co_Domain: Set_Int_A
+Mapping: [Alice->1, Bob->2, Charlie->3, Dave->4]
+
+#DEFINE_FUNCTION: G_IntSquare
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: Set_Int_A
+Co_Domain: Set_Int_B
+Mapping: [1->4, 2->5, 3->6, 4->7, 5	->8]
+
+#DEFINE_GRAPH: Graph_Main_Int
+Type: INT
+Vertices: Set_Int_A
+Directed: FALSE
+Edges: [(0,1,10), (1,2,5), (2,3,2), (3,5,1), (5,8,4), (1,100,20), (100,500,50), (2,13,15), (5,0,100), (3,1,7), (8,21,9)]
+
+#DEFINE_GRAPH: Graph_K3
+Type: CHAR
+Vertices: Set_Char_Mix
+Directed: FALSE
+Edges: [(A,B,1), (B,C,1), (C,A,1)]
+
+#DEFINE_GRAPH: Graph_Disconnected
+Type: INT
+Vertices: Set_Int_A
+Directed: FALSE
+Edges: [(1,2,1), (4,5,1)]
+
+#DEFINE_GRAPH: Graph_Directed_Cycle
+Type: STRING
+Vertices: Set_Str_Names
+Directed: TRUE
+Edges: [(Alice,Bob,10), (Bob,Charlie,20), (Charlie,Alice,30), (Dave,Dave,5)]
+
+OPERATION: #DISPLAY_DEFINED
+
+--- Set Operations ---
+
+OPERATION: UNION, Set_Int_A, Set_Int_B
+OPERATION: INTERSECTION, Set_Int_A, Set_Int_B
+OPERATION: DIFFERENCE, Set_Int_A, Set_Int_B
+OPERATION: DIFFERENCE, Set_Int_B, Set_Int_A
+OPERATION: SYMMETRIC_DIFFERENCE, Set_Int_A, Set_Int_B
+OPERATION: UNION, Set_Int_A, Set_Int_Empty
+OPERATION: INTERSECTION, Set_Int_A, Set_Int_Disjoint
+OPERATION: CARTESIAN_PRODUCT, Set_Char_Mix, Set_Int_Disjoint
+OPERATION: POWER_SET, Set_Char_Mix
+OPERATION: IS_SUBSET, Set_Int_Empty, Set_Int_A
+OPERATION: IS_ELEMENT, 42, Set_Int_Single
+OPERATION: IS_ELEMENT, 999, Set_Int_A
+
+--- Relation Checks ---
+
+OPERATION: RELATION_CHECK, Rel_Equivalence, REFLEXIVE
+OPERATION: RELATION_CHECK, Rel_Equivalence, SYMMETRIC
+OPERATION: RELATION_CHECK, Rel_Equivalence, TRANSITIVE
+OPERATION: RELATION_CHECK, Rel_Equivalence, EQUIVALENCE
+OPERATION: RELATION_CHECK, Rel_PartialOrder, PARTIAL_ORDER
+OPERATION: RELATION_CHECK, Rel_PartialOrder, ANTISYMMETRIC
+OPERATION: CLOSURE, Rel_Transitive, REFLEXIVE
+OPERATION: CLOSURE, Rel_Symmetric, TRANSITIVE
+
+--- Function Evaluations ---
+
+OPERATION: CHECK_FUNCTION, Func_Bijective, BIJECTIVE
+OPERATION: CHECK_FUNCTION, Func_Constant, INJECTIVE
+OPERATION: CHECK_FUNCTION, Func_Constant, SURJECTIVE
+OPERATION: EVALUATE, Func_Bijective, 3
+OPERATION: EVALUATE, F_StrToInt, Alice
+OPERATION: INVERSE, Func_Bijective
+OPERATION: COMPOSITION, F_StrToInt, G_IntSquare
+OPERATION: GET_IMAGES, Func_Constant
+OPERATION: GET_PREIMAGES, Func_Constant
+
+--- Graph Checks ---
+
+OPERATION: GRAPH_CHECK, Graph_K3, COMPLETE
+OPERATION: GRAPH_CHECK, Graph_Directed_Cycle, IS_DIRECTED
+OPERATION: GRAPH_CHECK, Graph_Disconnected, CONNECTED_COMPONENTS
+OPERATION: GRAPH_CHECK, Graph_Main_Int, HAMILTONIAN_CYCLE
+OPERATION: SHORTEST_PATH, Graph_Main_Int, 0, 5
+OPERATION: MST, Graph_Main_Int, 0
+
+--- Quantifier Checks ---
+
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Set_Int_Neg, IS_POSITIVE
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Set_Int_Neg, IS_POSITIVE
+OPERATION: NESTED_QUANTIFIER_CHECK, ALL_EXISTS, Set_Int_A, Set_Int_A, LESS
+
+--- Full Analysis ---
+
+OPERATION: RUN_FULL_ANALYSIS, high_value, frequently_accessed, gateway, Graph_Main_Int, Rel_Equivalence, Rel_PartialOrder, Func_Bijective

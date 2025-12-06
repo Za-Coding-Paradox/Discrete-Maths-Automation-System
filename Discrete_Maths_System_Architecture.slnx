@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Discrete_Maths_System_Architecture/Discrete_Maths_System_Architecture.vcxproj" />
+</Solution>

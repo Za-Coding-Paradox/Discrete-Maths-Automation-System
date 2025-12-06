@@ -1,0 +1,280 @@
+==============================================================================
+
+COMPREHENSIVE DMSA TEST SUITE
+
+Combines Quantifiers, Mixed Type Operations, and Graph Edge Cases
+
+==============================================================================
+
+OPERATION: #DISPLAY_DEFINED
+
+==============================================================================
+
+PART 1: QUANTIFIERS & PREDICATES
+
+==============================================================================
+
+#DEFINE_SET: Set_Int_Mixed
+Type: INT
+Data: {-10, -5, 0, 5, 10, 15}
+
+#DEFINE_SET: Set_Int_AllPos
+Type: INT
+Data: {1, 2, 3, 100}
+
+#DEFINE_SET: Set_Int_AllNeg
+Type: INT
+Data: {-1, -2, -100}
+
+#DEFINE_SET: Set_Int_ZeroOnly
+Type: INT
+Data: {0}
+
+#DEFINE_SET: Set_String_EmptyStr
+Type: STRING
+Data: {"", "", ""}
+
+#DEFINE_SET: Set_String_Mixed
+Type: STRING
+Data: {"Apple", "Banana", "", "Cherry"}
+
+#DEFINE_SET: Set_String_Long
+Type: STRING
+Data: {"Elephant", "Giraffe", "Hippopotamus"}
+
+#DEFINE_SET: Set_Char_Vowels
+Type: CHAR
+Data: {A, E, I, O, U, a, e, i, o, u}
+
+#DEFINE_SET: Set_Char_MixedCase
+Type: CHAR
+Data: {A, b, C, d, E}
+
+#DEFINE_SET: Set_Char_NonAlpha
+Type: CHAR
+Data: {1, 2, !, @}
+
+#DEFINE_SET: Set_Int_A
+Type: INT
+Data: {1, 2, 3}
+
+#DEFINE_SET: Set_Int_B
+Type: INT
+Data: {1, 2, 3}
+
+#DEFINE_SET: Set_Int_C
+Type: INT
+Data: {4, 5, 6}
+
+--- Integer Predicates ---
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Set_Int_AllPos, IS_POSITIVE
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Set_Int_AllNeg, IS_POSITIVE
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Set_Int_Mixed, IS_POSITIVE
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Set_Int_AllNeg, IS_POSITIVE
+OPERATION: QUANTIFIER_CHECK, UNIQUE_EXISTENTIAL, Set_Int_ZeroOnly, IS_EVEN
+OPERATION: QUANTIFIER_CHECK, UNIQUE_EXISTENTIAL, Set_Int_Mixed, IS_ODD
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL_DEMORGAN, Set_Int_AllNeg, IS_POSITIVE
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL_DEMORGAN, Set_Int_Mixed, IS_POSITIVE
+
+--- String Predicates ---
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Set_String_EmptyStr, IS_EMPTY
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Set_String_Mixed, IS_EMPTY
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Set_String_Long, IS_LONG
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Set_String_Mixed, IS_LONG
+OPERATION: QUANTIFIER_CHECK, UNIQUE_EXISTENTIAL, Set_String_Mixed, IS_EMPTY
+
+--- Char Predicates ---
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Set_Char_Vowels, IS_VOWEL
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Set_Char_MixedCase, IS_UPPER
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Set_Char_MixedCase, IS_LOWER
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Set_Char_NonAlpha, IS_UPPER
+
+--- Nested Quantifiers (Homogeneous) ---
+OPERATION: NESTED_QUANTIFIER_CHECK, ALL_ALL, Set_Int_A, Set_Int_B, EQUAL
+OPERATION: NESTED_QUANTIFIER_CHECK, ALL_EXISTS, Set_Int_A, Set_Int_B, EQUAL
+OPERATION: NESTED_QUANTIFIER_CHECK, EXISTS_ALL, Set_Int_A, Set_Int_B, EQUAL
+OPERATION: NESTED_QUANTIFIER_CHECK, ALL_ALL, Set_Int_A, Set_Int_C, NOT_EQUAL
+OPERATION: NESTED_QUANTIFIER_CHECK, ALL_EXISTS, Set_Int_A, Set_Int_C, LESS
+
+==============================================================================
+
+PART 2: MIXED TYPE OPERATIONS
+
+==============================================================================
+
+#DEFINE_SET: S_Int
+Type: INT
+Data: {1, 2}
+
+#DEFINE_SET: S_Str
+Type: STRING
+Data: {"A", "B"}
+
+#DEFINE_SET: S_Char
+Type: CHAR
+Data: {x, y}
+
+#DEFINE_FUNCTION: F_Int_Str
+Domain_Type: INT
+Co_Domain_Type: STRING
+Domain: S_Int
+Co_Domain: S_Str
+Mapping: [1->A, 2->B]
+
+#DEFINE_FUNCTION: F_Str_Char
+Domain_Type: STRING
+Co_Domain_Type: CHAR
+Domain: S_Str
+Co_Domain: S_Char
+Mapping: [A->x, B->y]
+
+#DEFINE_FUNCTION: F_Char_Int
+Domain_Type: CHAR
+Co_Domain_Type: INT
+Domain: S_Char
+Co_Domain: S_Int
+Mapping: [x->1, y->2]
+
+#DEFINE_FUNCTION: F_Int_Int_Partial
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: S_Int
+Co_Domain: S_Int
+Mapping: [1->2]
+
+--- Cartesian Products (Cross-Type) ---
+OPERATION: CARTESIAN_PRODUCT, S_Int, S_Str
+OPERATION: CARTESIAN_PRODUCT, S_Str, S_Int
+OPERATION: CARTESIAN_PRODUCT, S_Char, S_Str
+OPERATION: CARTESIAN_PRODUCT, S_Int, S_Char
+
+--- Function Composition Chains ---
+
+Should work: Int -> Str -> Char
+
+OPERATION: COMPOSITION, F_Int_Str, F_Str_Char
+
+Should work: Str -> Char -> Int
+
+OPERATION: COMPOSITION, F_Str_Char, F_Char_Int
+
+Should work: Char -> Int -> Str
+
+OPERATION: COMPOSITION, F_Char_Int, F_Int_Str
+
+Should FAIL (Type Mismatch): Int -> Str ... but next expects Int -> ...
+
+OPERATION: COMPOSITION, F_Int_Str, F_Int_Int_Partial
+
+--- Evaluations ---
+OPERATION: EVALUATE, F_Int_Str, 1
+OPERATION: EVALUATE, F_Str_Char, A
+OPERATION: EVALUATE, F_Char_Int, x
+
+--- Inverses & Properties ---
+OPERATION: CHECK_FUNCTION, F_Int_Str, BIJECTIVE
+OPERATION: CHECK_FUNCTION, F_Int_Int_Partial, PROPER
+OPERATION: INVERSE, F_Int_Str
+OPERATION: INVERSE, F_Int_Int_Partial
+
+==============================================================================
+
+PART 3: GRAPH EDGE CASES
+
+==============================================================================
+
+#DEFINE_SET: Nodes_Single
+Type: INT
+Data: {1}
+
+#DEFINE_SET: Nodes_Disconnected
+Type: INT
+Data: {1, 2, 3, 4}
+
+#DEFINE_SET: Nodes_Cycle
+Type: INT
+Data: {1, 2, 3}
+
+#DEFINE_SET: Nodes_Linear
+Type: INT
+Data: {1, 2, 3, 4, 5}
+
+#DEFINE_SET: Critical_Impossible
+Type: INT
+Data: {1, 4}
+
+#DEFINE_GRAPH: G_Single
+Type: INT
+Vertices: Nodes_Single
+Directed: FALSE
+Edges: []
+
+#DEFINE_GRAPH: G_SelfLoop
+Type: INT
+Vertices: Nodes_Single
+Directed: FALSE
+Edges: [(1,1,10)]
+
+#DEFINE_GRAPH: G_Disconnected
+Type: INT
+Vertices: Nodes_Disconnected
+Directed: FALSE
+Edges: [(1,2,5), (3,4,5)]
+
+#DEFINE_GRAPH: G_Cycle
+Type: INT
+Vertices: Nodes_Cycle
+Directed: TRUE
+Edges: [(1,2,1), (2,3,1), (3,1,1)]
+
+#DEFINE_GRAPH: G_Linear
+Type: INT
+Vertices: Nodes_Linear
+Directed: FALSE
+Edges: [(1,2,1), (2,3,1), (3,4,1), (4,5,1)]
+
+--- Connectivity Checks ---
+OPERATION: GRAPH_CHECK, G_Single, CONNECTED_COMPONENTS
+OPERATION: GRAPH_CHECK, G_Disconnected, CONNECTED_COMPONENTS
+OPERATION: GRAPH_CHECK, G_Linear, CONNECTED_COMPONENTS
+
+--- Cycle Checks ---
+OPERATION: GRAPH_CHECK, G_Cycle, HAMILTONIAN_CYCLE
+OPERATION: GRAPH_CHECK, G_Cycle, EULERIAN_CIRCUIT
+OPERATION: GRAPH_CHECK, G_Linear, EULERIAN_PATH
+
+--- Shortest Path Edge Cases ---
+
+Path exists
+
+OPERATION: SHORTEST_PATH, G_Linear, 1, 5
+
+Path does not exist (disconnected)
+
+OPERATION: SHORTEST_PATH, G_Disconnected, 1, 4
+
+Start == End
+
+OPERATION: SHORTEST_PATH, G_Linear, 3, 3
+
+Node not in graph (should handle gracefully)
+
+OPERATION: SHORTEST_PATH, G_Linear, 1, 99
+
+--- MST Edge Cases ---
+
+Valid MST
+
+OPERATION: MST, G_Linear, 1
+
+Disconnected Graph (MST should fail)
+
+OPERATION: MST, G_Disconnected, 1
+
+Impossible Constraint (Node 4 is reachable, but maybe not in a way that allows 1 and 4 in specific MST logic? Actually disjoint makes it fail regardless)
+
+OPERATION: MST, G_Disconnected, 1, Critical_Impossible
+
+Single Node MST
+
+OPERATION: MST, G_Single, 1

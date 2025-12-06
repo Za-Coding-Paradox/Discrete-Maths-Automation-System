@@ -1,0 +1,297 @@
+==============================================================================
+
+ULTRA RIGOROUS DMSA SYSTEM STRESS TEST
+
+Focus: Mathematical Identities, Topology, Cross-Type permutation, and Edge Cases
+
+==============================================================================
+
+OPERATION: #DISPLAY_DEFINED
+
+==============================================================================
+
+1. DATA DEFINITIONS (Foundation)
+
+==============================================================================
+
+#DEFINE_SET: Z_Empty
+Type: INT
+Data: {}
+
+#DEFINE_SET: Z_Small
+Type: INT
+Data: {1, 2}
+
+#DEFINE_SET: Z_Medium
+Type: INT
+Data: {1, 2, 3, 4}
+
+#DEFINE_SET: Z_Large
+Type: INT
+Data: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+#DEFINE_SET: Z_Disjoint
+Type: INT
+Data: {100, 101}
+
+#DEFINE_SET: S_Empty
+Type: STRING
+Data: {}
+
+#DEFINE_SET: S_Fruit
+Type: STRING
+Data: {Apple, Banana, Cherry}
+
+#DEFINE_SET: S_Fruit_Subset
+Type: STRING
+Data: {Apple, Banana}
+
+#DEFINE_SET: C_Vowels
+Type: CHAR
+Data: {A, E, I, O, U}
+
+#DEFINE_SET: C_Consonants
+Type: CHAR
+Data: {B, C, D}
+
+Reflexive only
+
+#DEFINE_RELATION: R_Reflexive
+Type: INT
+Domain: Z_Small
+Order_Pairs: [(1,1), (2,2), (1,2)]
+
+Symmetric only
+
+#DEFINE_RELATION: R_Symmetric
+Type: INT
+Domain: Z_Small
+Order_Pairs: [(1,2), (2,1)]
+
+Transitive only
+
+#DEFINE_RELATION: R_Transitive
+Type: INT
+Domain: Z_Medium
+Order_Pairs: [(1,2), (2,3), (1,3), (3,4)]
+
+Int -> Int
+
+#DEFINE_FUNCTION: F_II
+Domain_Type: INT
+Co_Domain_Type: INT
+Domain: Z_Small
+Co_Domain: Z_Medium
+Mapping: [1->3, 2->4]
+
+Int -> Str
+
+#DEFINE_FUNCTION: F_IS
+Domain_Type: INT
+Co_Domain_Type: STRING
+Domain: Z_Small
+Co_Domain: S_Fruit
+Mapping: [1->Apple, 2->Banana]
+
+Str -> Char
+
+#DEFINE_FUNCTION: F_SC
+Domain_Type: STRING
+Co_Domain_Type: CHAR
+Domain: S_Fruit
+Co_Domain: C_Vowels
+Mapping: [Apple->A, Banana->A, Cherry->E]
+
+Char -> Int
+
+#DEFINE_FUNCTION: F_CI
+Domain_Type: CHAR
+Co_Domain_Type: INT
+Domain: C_Vowels
+Co_Domain: Z_Small
+Mapping: [A->1, E->2, I->1, O->2, U->1]
+
+Complete Graph K5 (Undirected)
+
+#DEFINE_GRAPH: G_K5
+Type: INT
+Vertices: Z_Large
+Directed: FALSE
+Edges: [(1,2,1), (1,3,1), (1,4,1), (1,5,1), (2,3,1), (2,4,1), (2,5,1), (3,4,1), (3,5,1), (4,5,1)]
+
+Star Graph (Center 1, Leaves 2-5)
+
+#DEFINE_GRAPH: G_Star
+Type: INT
+Vertices: Z_Large
+Directed: FALSE
+Edges: [(1,2,10), (1,3,10), (1,4,10), (1,5,10)]
+
+Line Graph (1-2-3-4-5)
+
+#DEFINE_GRAPH: G_Line
+Type: INT
+Vertices: Z_Large
+Directed: FALSE
+Edges: [(1,2,1), (2,3,1), (3,4,1), (4,5,1)]
+
+Disconnected Graph with Cycles
+
+#DEFINE_GRAPH: G_Complex
+Type: STRING
+Vertices: S_Fruit
+Directed: TRUE
+Edges: [(Apple,Banana,5), (Banana,Apple,5), (Cherry,Cherry,1)]
+
+==============================================================================
+
+2. RIGOROUS SET ALGEBRA (Identity & Laws)
+
+==============================================================================
+
+Identity Law: A U {} = A
+
+OPERATION: UNION, Z_Medium, Z_Empty
+OPERATION: IS_SUBSET, Z_Medium, Z_Medium
+
+Idempotent Law: A U A = A
+
+OPERATION: UNION, Z_Medium, Z_Medium
+
+Domination Law: A n {} = {}
+
+OPERATION: INTERSECTION, Z_Medium, Z_Empty
+
+Difference Identities: A - A = {}
+
+OPERATION: DIFFERENCE, Z_Medium, Z_Medium
+
+Disjoint Logic
+
+OPERATION: INTERSECTION, Z_Medium, Z_Disjoint
+OPERATION: IS_SUBSET, Z_Disjoint, Z_Medium
+
+String Set Logic
+
+OPERATION: IS_PROPER_SUBSET, S_Fruit_Subset, S_Fruit
+OPERATION: SYMMETRIC_DIFFERENCE, S_Fruit, S_Fruit_Subset
+
+==============================================================================
+
+3. ADVANCED RELATION ANALYSIS
+
+==============================================================================
+
+Closure Idempotency: Closure(Closure(R)) should equal Closure(R)
+
+OPERATION: CLOSURE, R_Symmetric, TRANSITIVE
+
+(Manual check required in output, logic implies stability)
+
+Partial Order check on a Transitive-only relation
+
+OPERATION: RELATION_CHECK, R_Transitive, PARTIAL_ORDER
+
+Equivalence check on a Reflexive-only relation
+
+OPERATION: RELATION_CHECK, R_Reflexive, EQUIVALENCE
+
+Inverse Relations (via Symmetry Check on non-symmetric)
+
+OPERATION: RELATION_CHECK, R_Reflexive, SYMMETRIC
+
+==============================================================================
+
+4. FUNCTION COMPOSITION STRESS (The Chain)
+
+==============================================================================
+
+Chain: Char -> Int -> Str -> Char
+
+Step 1: Char->Int (F_CI)
+
+Step 2: Int->Str (F_IS)
+
+Step 3: Str->Char (F_SC)
+
+Composition 1: (F_IS o F_CI) => Char -> Str
+
+OPERATION: COMPOSITION, F_CI, F_IS
+
+Composition 2: (F_SC o F_IS) => Int -> Char
+
+OPERATION: COMPOSITION, F_IS, F_SC
+
+Evaluation Checks on basic functions
+
+OPERATION: EVALUATE, F_II, 1
+OPERATION: EVALUATE, F_IS, 1
+OPERATION: EVALUATE, F_SC, Apple
+OPERATION: EVALUATE, F_CI, A
+
+Property Checks
+
+OPERATION: CHECK_FUNCTION, F_SC, SURJECTIVE
+OPERATION: CHECK_FUNCTION, F_II, INJECTIVE
+OPERATION: CHECK_FUNCTION, F_CI, BIJECTIVE
+
+==============================================================================
+
+5. GRAPH TOPOLOGY & ALGORITHMS
+
+==============================================================================
+
+Complete Graph Properties
+
+OPERATION: GRAPH_CHECK, G_K5, COMPLETE
+OPERATION: GRAPH_CHECK, G_K5, EULERIAN_CIRCUIT
+OPERATION: GRAPH_CHECK, G_K5, HAMILTONIAN_CYCLE
+
+Star Graph Properties
+
+OPERATION: GRAPH_CHECK, G_Star, COMPLETE
+OPERATION: MST, G_Star, 1
+
+Line Graph Pathfinding
+
+OPERATION: SHORTEST_PATH, G_Line, 1, 5
+OPERATION: MST, G_Line, 1
+
+Disconnected / Cyclic
+
+OPERATION: GRAPH_CHECK, G_Complex, CONNECTED_COMPONENTS
+OPERATION: GRAPH_CHECK, G_Complex, HAMILTONIAN_CYCLE
+OPERATION: SHORTEST_PATH, G_Complex, Apple, Cherry
+
+==============================================================================
+
+6. LOGIC & QUANTIFIERS (Cross-Checking)
+
+==============================================================================
+
+Checking definitions via quantifiers
+
+"All elements in Z_Small are Positive"
+
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, Z_Small, IS_POSITIVE
+
+"Some elements in Z_Medium are Even"
+
+OPERATION: QUANTIFIER_CHECK, EXISTENTIAL, Z_Medium, IS_EVEN
+
+"Are all elements in Z_Small LESS than all elements in Z_Disjoint?"
+
+Z_Small={1,2}, Z_Disjoint={100,101}. Should be TRUE.
+
+OPERATION: NESTED_QUANTIFIER_CHECK, ALL_ALL, Z_Small, Z_Disjoint, LESS
+
+"Is there any element in Z_Large EQUAL to an element in Z_Disjoint?"
+
+Should be FALSE.
+
+OPERATION: NESTED_QUANTIFIER_CHECK, EXISTS_EXISTS, Z_Large, Z_Disjoint, EQUAL
+
+Char properties
+
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, C_Vowels, IS_VOWEL
+OPERATION: QUANTIFIER_CHECK, UNIVERSAL, C_Consonants, IS_VOWEL
