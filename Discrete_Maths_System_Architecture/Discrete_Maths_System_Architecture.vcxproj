@@ -18,6 +18,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Entry_Point\main.cpp" />
+    <ClCompile Include="Tests\tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Includes\Apex_Essentials\Core\Core.h" />
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\Data_Registery.h" />
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\DMSA_Controller.h" />
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\File_IO_Manager.h" />
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\Type_Systems.h" />
+    <ClInclude Include="Includes\Graph_Theory\Graph.h" />
+    <ClInclude Include="Includes\Graph_Theory\Graph_Utility.h" />
+    <ClInclude Include="Includes\Relations_And_Functions\Function_Theory\Functions.h" />
+    <ClInclude Include="Includes\Relations_And_Functions\Relation_Theory\Relations.h" />
+    <ClInclude Include="Includes\Set_Theory\Critical_Node_Generator.h" />
+    <ClInclude Include="Includes\Set_Theory\Math_Set.h" />
+    <ClInclude Include="Includes\Set_Theory\Quantifier_Validator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Tests\mixed_input_full_1.txt" />
+    <Text Include="Tests\mixed_input_full_2.txt" />
+    <Text Include="Tests\mixed_input_full_3.txt" />
+    <Text Include="Tests\mixed_input_full_4.txt" />
+    <Text Include="Tests\output_mixed_full.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -105,6 +130,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)Includes\Apex_Essentials\Core;$(ProjectDir)Includes\Apex_Essentials\Integration_Module;$(ProjectDir)Includes\Graph_Theory;$(ProjectDir)Includes\Relations_And_Functions\Relation_Theory;$(ProjectDir)Includes\Relations_And_Functions\Function_Theory;$(ProjectDir)Includes\Set_Theory;$(ProjectDir)Tests\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,30 +146,13 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)Includes\Apex_Essentials\Core;$(ProjectDir)Includes\Apex_Essentials\Integration_Module;$(ProjectDir)Includes\Graph_Theory;$(ProjectDir)Includes\Relations_And_Functions\Relation_Theory;$(ProjectDir)Includes\Relations_And_Functions\Function_Theory;$(ProjectDir)Includes\Set_Theory;$(ProjectDir)Tests\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="tests.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Core.h" />
-    <ClInclude Include="Critical_Node_Generator.h" />
-    <ClInclude Include="Data_Registery.h" />
-    <ClInclude Include="DMSA_Controller.h" />
-    <ClInclude Include="File_IO_Manager.h" />
-    <ClInclude Include="Functions.h" />
-    <ClInclude Include="Graph.h" />
-    <ClInclude Include="Graph_Utility.h" />
-    <ClInclude Include="Math_Set.h" />
-    <ClInclude Include="Quantifier_Validator.h" />
-    <ClInclude Include="Relations.h" />
-    <ClInclude Include="Type_Systems.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

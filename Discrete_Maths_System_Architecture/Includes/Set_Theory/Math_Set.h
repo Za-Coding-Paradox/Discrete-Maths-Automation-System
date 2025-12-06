@@ -2,6 +2,7 @@
 
 #include "Core.h"
 
+
 // c++20 concept definition
 // this enforces that any type used in our sets must support comparison
 // this is crucial because our sets are sorted and require <, >, ==

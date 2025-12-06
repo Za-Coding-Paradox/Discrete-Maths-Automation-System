@@ -48,49 +48,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Entry_Point\main.cpp">
       <Filter>Source Files\Entry_Point</Filter>
     </ClCompile>
-    <ClCompile Include="tests.cpp">
+    <ClCompile Include="Tests\tests.cpp">
       <Filter>Source Files\Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core.h">
+    <ClInclude Include="Includes\Apex_Essentials\Core\Core.h">
       <Filter>Source Files\Includes\Apex/Essentials\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Data_Registery.h">
-      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
-    </ClInclude>
-    <ClInclude Include="DMSA_Controller.h">
-      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
-    </ClInclude>
-    <ClInclude Include="File_IO_Manager.h">
-      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Type_Systems.h">
-      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Functions.h">
+    <ClInclude Include="Includes\Relations_And_Functions\Function_Theory\Functions.h">
       <Filter>Source Files\Includes\Functions_And_Relations\Function_Theory</Filter>
     </ClInclude>
-    <ClInclude Include="Relations.h">
+    <ClInclude Include="Includes\Relations_And_Functions\Relation_Theory\Relations.h">
       <Filter>Source Files\Includes\Functions_And_Relations\Relation_Theory</Filter>
     </ClInclude>
-    <ClInclude Include="Graph.h">
+    <ClInclude Include="Includes\Graph_Theory\Graph.h">
       <Filter>Source Files\Includes\Graph_Theory</Filter>
     </ClInclude>
-    <ClInclude Include="Graph_Utility.h">
+    <ClInclude Include="Includes\Graph_Theory\Graph_Utility.h">
       <Filter>Source Files\Includes\Graph_Theory</Filter>
     </ClInclude>
-    <ClInclude Include="Math_Set.h">
+    <ClInclude Include="Includes\Set_Theory\Critical_Node_Generator.h">
       <Filter>Source Files\Includes\Set_Theory</Filter>
     </ClInclude>
-    <ClInclude Include="Quantifier_Validator.h">
+    <ClInclude Include="Includes\Set_Theory\Math_Set.h">
       <Filter>Source Files\Includes\Set_Theory</Filter>
     </ClInclude>
-    <ClInclude Include="Critical_Node_Generator.h">
+    <ClInclude Include="Includes\Set_Theory\Quantifier_Validator.h">
       <Filter>Source Files\Includes\Set_Theory</Filter>
     </ClInclude>
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\Data_Registery.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\DMSA_Controller.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\File_IO_Manager.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\Apex_Essentials\Integration_Module\Type_Systems.h">
+      <Filter>Source Files\Includes\Apex/Essentials\Intergeration_Module</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Tests\mixed_input_full_1.txt">
+      <Filter>Source Files\Tests</Filter>
+    </Text>
+    <Text Include="Tests\mixed_input_full_2.txt">
+      <Filter>Source Files\Tests</Filter>
+    </Text>
+    <Text Include="Tests\mixed_input_full_3.txt">
+      <Filter>Source Files\Tests</Filter>
+    </Text>
+    <Text Include="Tests\mixed_input_full_4.txt">
+      <Filter>Source Files\Tests</Filter>
+    </Text>
+    <Text Include="Tests\output_mixed_full.txt">
+      <Filter>Source Files\Tests</Filter>
+    </Text>
   </ItemGroup>
 </Project>
