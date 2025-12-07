@@ -44,6 +44,9 @@
     <Text Include="Tests\mixed_input_full_5.txt" />
     <Text Include="Tests\output_mixed_full.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Report\DMSA_Project_Report.docx" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
