@@ -453,112 +453,119 @@ public:
 		}
 	}
 
-	// Streams ANY object using its operator<<.
+	// Prints any object using its << operator
 	template <typename T>
 	void Write_Object(const std::string& label, const T& object)
 	{
-		m_Test_Count++;
-		m_Test_Passed++;
+		m_Test_Count++;    // Increase total test count
+		m_Test_Passed++;   // Mark this test as passed
 
 		std::stringstream ss;
-		ss << object;
+		ss << object;      // Convert object to string
 		std::string content = ss.str();
 
-		// Formatting: JUST the Label
+		// Store the label text
 		std::string header = label;
 
-		// If content is multi-line (Graphs, large sets), put it on the next line
+		// If object has multiple lines, print it on next line
 		if (content.find('\n') != std::string::npos)
 		{
-			Write_Line(header + ":");
-			Write_Line(content);
-			Write_Line("------------------------------------------------------------");
-			Write_Line(""); // Trailing space
+			Write_Line(header + ":");        // Print label
+			Write_Line(content);             // Print full multi-line content
+			Write_Line("------------------------------------------------------------"); // Separator line
+			Write_Line("");                  // Add blank line
 		}
 		else
 		{
-			// Single line objects
+			// For single line objects
 			std::stringstream line_ss;
 			line_ss << std::left << std::setw(LABEL_WIDTH) << (header + " :") << content;
-			Write_Line(line_ss.str());
+			Write_Line(line_ss.str());       // Print formatted line
 		}
 	}
 
-	// Special Write for just strings (used in custom reports)
+	// Prints normal text with a label
 	void Write_Info(const std::string& label, const std::string& content)
 	{
 		std::stringstream line_ss;
 		line_ss << std::left << std::setw(LABEL_WIDTH) << (label + " :") << content;
-		Write_Line(line_ss.str());
+		Write_Line(line_ss.str());          // Print label and text
 	}
 
+	// Prints raw text without formatting
 	void Write_Raw(const std::string& content)
 	{
-		Write_Line(content);
+		Write_Line(content);                // Output raw text
 	}
 
+	// Prints operation result
 	void Write_Result(const std::string& operation, const std::string& result)
 	{
-		m_Test_Count++;
-		m_Test_Passed++;
+		m_Test_Count++;     // Increase operation count
+		m_Test_Passed++;    // Mark operation as passed
 
 		std::string prefix = operation;
 		std::stringstream ss;
 		ss << std::left << std::setw(LABEL_WIDTH) << (prefix + " :") << result;
-		Write_Line(ss.str());
+		Write_Line(ss.str());              // Print formatted result
 	}
 
+	// Prints TRUE or FALSE for a property
 	void Write_Property(const std::string& property, bool value)
 	{
-		m_Test_Count++;
-		if (value) m_Test_Passed++;
-		else m_Test_Failed++;
+		m_Test_Count++;        // Increase total test count
+		if (value) m_Test_Passed++;   // Count as pass if true
+		else m_Test_Failed++;         // Count as fail if false
 
 		std::string status = value ? "TRUE" : "FALSE";
 		std::string prefix = property;
 
 		std::stringstream ss;
 		ss << std::left << std::setw(LABEL_WIDTH) << (prefix + " :") << status;
-		Write_Line(ss.str());
+		Write_Line(ss.str());             // Print the result
 	}
 
+	// Prints error message
 	void Write_Error(const std::string& message)
 	{
-		m_Test_Count++; // Increment total operations count for errors too
-		m_Test_Failed++;
-		Write_Line("\nERROR: " + message + "\n");
+		m_Test_Count++;       // Increase total count for errors
+		m_Test_Failed++;      // Mark this as failed
+		Write_Line("\nERROR: " + message + "\n");  // Print error message
 	}
 
+	// Prints summary of all operations
 	void Write_Summary()
 	{
-		std::string border(120, '=');
+		std::string border(120, '=');  // Create a border line
 		Write_Line("");
 		Write_Line("");
 		Write_Line(border);
 		Write_Line("  EXECUTION SUMMARY");
 		Write_Line(border);
 
+		// Helper to print one stat line
 		auto LogStat = [&](std::string label, int val) {
 			std::stringstream ss;
 			ss << "  " << std::left << std::setw(20) << label << ": " << val;
-			Write_Line(ss.str());
+			Write_Line(ss.str());   // Print stat line
 			};
 
-		LogStat("Total Operations", m_Test_Count);
-		LogStat("Successful", m_Test_Passed);
-		LogStat("Failed/False", m_Test_Failed);
+		LogStat("Total Operations", m_Test_Count);  // Print total operations
+		LogStat("Successful", m_Test_Passed);        // Print total passed
+		LogStat("Failed/False", m_Test_Failed);      // Print total failed
 
 		Write_Line(border);
-		Write_Line("  End of Report");
+		Write_Line("  End of Report");   // End of summary
 	}
 
 private:
+	// Writes one line to file and console
 	void Write_Line(const std::string& line)
 	{
-		m_Output_File << line << "\n";
+		m_Output_File << line << "\n";   // Write to output file
 		if (m_Console_Echo)
 		{
-			std::cout << line << std::endl;
+			std::cout << line << std::endl;  // Also print to console if enabled
 		}
 	}
 };
