@@ -960,11 +960,11 @@ private:
 
 					m_Output->Write_Info("Vertex Count", std::to_string(graph.Get_Num_Vertices()));
 					m_Output->Write_Info("Edge Count", std::to_string(graph.Get_Num_Edges()));
+					Check_Graph_Props(graph, "CONNECTED_COMPONENTS", graphName);
 
 					// Check all requested properties
 					Check_Graph_Props(graph, "IS_DIRECTED", graphName);
 					Check_Graph_Props(graph, "COMPLETE", graphName);
-					Check_Graph_Props(graph, "CONNECTED_COMPONENTS", graphName);
 					Check_Graph_Props(graph, "EULERIAN_CIRCUIT", graphName);
 					Check_Graph_Props(graph, "EULERIAN_PATH", graphName);
 					Check_Graph_Props(graph, "HAMILTONIAN_CYCLE", graphName);
