@@ -963,8 +963,8 @@ private:
 
 					// Check all requested properties
 					Check_Graph_Props(graph, "IS_DIRECTED", graphName);
-					Check_Graph_Props(graph, "CONNECTED_COMPONENTS", graphName);
 					Check_Graph_Props(graph, "COMPLETE", graphName);
+					Check_Graph_Props(graph, "CONNECTED_COMPONENTS", graphName);
 					Check_Graph_Props(graph, "EULERIAN_CIRCUIT", graphName);
 					Check_Graph_Props(graph, "EULERIAN_PATH", graphName);
 					Check_Graph_Props(graph, "HAMILTONIAN_CYCLE", graphName);
