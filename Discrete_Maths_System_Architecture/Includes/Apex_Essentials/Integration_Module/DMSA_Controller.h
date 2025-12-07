@@ -804,6 +804,9 @@ private:
 	{
 		m_Output->Write_Section("FULL SYSTEM ANALYSIS");
 
+		// Make a copy of generic args so we can append the target graph if needed
+		std::vector<std::string> final_generic_args = generic_args;
+
 		std::vector<std::string> sets, graphs, rels, funcs;
 		Data_Type analysisType = Data_Type::UNKNOWN;
 
@@ -819,10 +822,27 @@ private:
 				else if (std::holds_alternative<Graph<std::string>>(g)) analysisType = Data_Type::STRING;
 				else if (std::holds_alternative<Graph<char>>(g)) analysisType = Data_Type::CHAR;
 			}
+
+			// [AUTO-INCLUDE LOGIC]
+			// Automatically add the target graph to the list of graphs to analyze generally
+			// This prevents the user from having to type it twice: {..., G1, ...}, G1
+			if (!config.m_Target_Graph.empty() && m_Registry.Exists_Graph(config.m_Target_Graph))
+			{
+				bool already_present = false;
+				for (const auto& existing : final_generic_args) {
+					if (existing == config.m_Target_Graph) {
+						already_present = true;
+						break;
+					}
+				}
+				if (!already_present) {
+					final_generic_args.push_back(config.m_Target_Graph);
+				}
+			}
 		}
 
 		// 2. Categorize generic inputs
-		for (const auto& name : generic_args) {
+		for (const auto& name : final_generic_args) {
 			if (m_Registry.Exists_Set(name)) {
 				sets.push_back(name);
 				if (analysisType == Data_Type::UNKNOWN) analysisType = m_Registry.Get_Set_Type(name);
@@ -929,13 +949,24 @@ private:
 		// --- 2. Generic Structure Analysis (Iterate over the lists) ---
 
 		if (!graphs.empty()) {
-			m_Output->Write_Sub_Section("Generic Graph Properties");
+			m_Output->Write_Sub_Section("Graph Analysis"); // Broad Header
 			for (const auto& graphName : graphs) {
 				if (std::holds_alternative<Graph<T>>(m_Registry.m_Graphs[graphName])) {
 					auto& graph = std::get<Graph<T>>(m_Registry.m_Graphs[graphName]);
-					m_Output->Write_Info("VERTICES[" + graphName + "]", std::to_string(graph.Get_Num_Vertices()));
+
+					// Create a specific sub-header or spacer for this graph
+					m_Output->Write_Raw("\nAnalysis for Graph: " + graphName);
+					m_Output->Write_Raw("------------------------------------------------------------");
+
+					m_Output->Write_Info("Vertex Count", std::to_string(graph.Get_Num_Vertices()));
+					m_Output->Write_Info("Edge Count", std::to_string(graph.Get_Num_Edges()));
+
+					// Check all requested properties
+					Check_Graph_Props(graph, "IS_DIRECTED", graphName);
+					Check_Graph_Props(graph, "CONNECTED_COMPONENTS", graphName);
 					Check_Graph_Props(graph, "COMPLETE", graphName);
 					Check_Graph_Props(graph, "EULERIAN_CIRCUIT", graphName);
+					Check_Graph_Props(graph, "EULERIAN_PATH", graphName);
 					Check_Graph_Props(graph, "HAMILTONIAN_CYCLE", graphName);
 				}
 			}
@@ -946,11 +977,16 @@ private:
 			for (const auto& rName : rels) {
 				if (std::holds_alternative<Relation<T>>(m_Registry.m_Relations[rName])) {
 					auto& rel = std::get<Relation<T>>(m_Registry.m_Relations[rName]);
-					m_Output->Write_Raw("\nRELATION " + rName + ":");
+
+					m_Output->Write_Raw("\nAnalysis for Relation: " + rName);
+					m_Output->Write_Raw("------------------------------------------------------------");
+
 					Check_Rel_Props(rel, "REFLEXIVE", rName);
 					Check_Rel_Props(rel, "SYMMETRIC", rName);
+					Check_Rel_Props(rel, "ANTISYMMETRIC", rName);
 					Check_Rel_Props(rel, "TRANSITIVE", rName);
 					Check_Rel_Props(rel, "EQUIVALENCE", rName);
+					Check_Rel_Props(rel, "PARTIAL_ORDER", rName);
 				}
 			}
 		}

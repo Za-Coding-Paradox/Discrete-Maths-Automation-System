@@ -332,6 +332,22 @@ public:
 		return (int)m_Adjacency_List.size();
 	}
 
+	int Get_Num_Edges() const
+	{
+		int count = 0;
+		for (const auto& [node, neighbors] : m_Adjacency_List)
+		{
+			count += neighbors.size();
+		}
+
+		// If undirected, each edge is stored twice (A->B and B->A), so divide by 2
+		if (!m_Is_Directed)
+		{
+			return count / 2;
+		}
+		return count;
+	}
+
 	int Get_Degree(const type& node) const
 	{
 		if (m_Adjacency_List.find(node) != m_Adjacency_List.end())

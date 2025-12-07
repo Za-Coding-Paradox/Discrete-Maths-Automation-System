@@ -6,23 +6,25 @@ Data: {1, 2, 3, 4, 5, 6}
 Type: INT
 Data: {1, 2, 4}
 
-#DEFINE_SET: frequently_accessed
-Type: INT
-Data: {2, 3, 4}
-
-#DEFINE_SET: gateway
+#DEFINE_SET: gateway_nodes
 Type: INT
 Data: {5}
+
+#DEFINE_SET: freq_access
+Type: INT
+Data: {2 ,3, 4}
 
 #DEFINE_GRAPH: G1
 Type: INT
 Vertices: set_A
 Directed: FALSE
-Edges: [(1,2,2), (1,3,4), (2,3,1), (1,3,7), (3,4,3), (3,5,2), (4,5,1), (4,6,5), (5,6,3)]
+Edges: [(1,2,2), (1,3,4), (2,3,1), (2,4,7), (3,4,3), (3,5,2), (4,5,1), (4,6,5), (5,6,3)]
 
 #DEFINE_RELATION: R1
 Type: INT
 Domain: set_A
-Order_Pairs: [(1,2), (2,3), (3,1), (4,5), (5,6), (6,4)]
+Order_Pairs: [(1,2), (2,3), (3,1), (4,5), (5,6), (6,4), (4,4)]
 
-OPERATION: RUN_FULL_ANALYSIS, set_A, G1, R1
+New Syntax: RUN_FULL_ANALYSIS, {HighValue, Gateway, Freq, Graph, StartNode, EndNode}, [Optional Extra Structures...]
+
+OPERATION: RUN_FULL_ANALYSIS, {high_value, gateway_nodes, freq_access, G1, 1, 6}, R1
