@@ -41,6 +41,7 @@
     <Text Include="Tests\mixed_input_full_2.txt" />
     <Text Include="Tests\mixed_input_full_3.txt" />
     <Text Include="Tests\mixed_input_full_4.txt" />
+    <Text Include="Tests\mixed_input_full_5.txt" />
     <Text Include="Tests\output_mixed_full.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

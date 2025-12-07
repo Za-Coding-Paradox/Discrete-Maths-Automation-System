@@ -8,7 +8,7 @@ int main()
 		std::cout << "\n[1/1] Processing 'mixed_input_full.txt'...\n";
 
 		// Initialize controller with the specific input file and a corresponding output file
-		DMSA_Controller controller( "D:\\Programming\\source\\repos\\Projects\\Discrete_Maths_System_Architecture\\Discrete_Maths_System_Architecture\\Tests\\mixed_input_full_4.txt", "D:\\Programming\\source\\repos\\Projects\\Discrete_Maths_System_Architecture\\Discrete_Maths_System_Architecture\\Tests\\output_full.txt" );
+		DMSA_Controller controller( "D:\\Programming\\source\\repos\\Projects\\Discrete_Maths_System_Architecture\\Discrete_Maths_System_Architecture\\Tests\\mixed_input_full_5.txt", "D:\\Programming\\source\\repos\\Projects\\Discrete_Maths_System_Architecture\\Discrete_Maths_System_Architecture\\Tests\\output_full.txt" );
 
 		// Execute the parsing and operation engine
 		controller.Run();

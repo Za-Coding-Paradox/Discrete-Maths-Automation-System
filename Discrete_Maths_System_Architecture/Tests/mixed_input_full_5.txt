@@ -1,0 +1,28 @@
+#DEFINE_SET: set_A
+Type: INT
+Data: {1, 2, 3, 4, 5, 6}
+
+#DEFINE_SET: high_value
+Type: INT
+Data: {1, 2, 4}
+
+#DEFINE_SET: frequently_accessed
+Type: INT
+Data: {2, 3, 4}
+
+#DEFINE_SET: gateway
+Type: INT
+Data: {5}
+
+#DEFINE_GRAPH: G1
+Type: INT
+Vertices: set_A
+Directed: FALSE
+Edges: [(1,2,2), (1,3,4), (2,3,1), (1,3,7), (3,4,3), (3,5,2), (4,5,1), (4,6,5), (5,6,3)]
+
+#DEFINE_RELATION: R1
+Type: INT
+Domain: set_A
+Order_Pairs: [(1,2), (2,3), (3,1), (4,5), (5,6), (6,4)]
+
+OPERATION: RUN_FULL_ANALYSIS, set_A, G1, R1

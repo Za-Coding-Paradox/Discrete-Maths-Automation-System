@@ -24,6 +24,19 @@ struct Func_Traits<Function<A, B>> {
 template<typename T> struct Set_Traits;
 template<typename T> struct Set_Traits<Math_Set<T>> { using Type = T; };
 
+// [NEW] Structure to capture the specific execution parameters defined in the curly braces
+struct Analysis_Config
+{
+	std::string m_High_Value_Set;
+	std::string m_Gateway_Set;      // Corresponds to 'priority_nodes' slot in user prompt
+	std::string m_Freq_Set;
+	std::string m_Target_Graph;
+	std::string m_Start_Node;
+	std::string m_End_Node;
+
+	bool Has_Config() const { return !m_Target_Graph.empty(); }
+};
+
 class DMSA_Controller
 {
 private:
@@ -351,18 +364,61 @@ private:
 	{
 		auto parts = String_Utils::Split(line, ':');
 		if (parts.size() < 2) return;
-		auto params = String_Utils::Split(parts[1], ',');
-		std::string op = String_Utils::To_Upper(String_Utils::Trim(params[0]));
 
-		// special batch command to run a full analysis suite
-		if (op == "RUN_FULL_ANALYSIS") {
-			std::vector<std::string> args;
-			for (size_t i = 1; i < params.size(); ++i) {
-				args.push_back(String_Utils::Trim(params[i]));
+		std::string command_part = String_Utils::Trim(parts[1]);
+
+		// Check for RUN_FULL_ANALYSIS specifically because it uses the complex {} syntax
+		if (String_Utils::Starts_With(String_Utils::To_Upper(command_part), "RUN_FULL_ANALYSIS"))
+		{
+			Analysis_Config config;
+			std::vector<std::string> generic_structures;
+
+			// Check for config block enclosed in {}
+			size_t start_brace = command_part.find('{');
+			size_t end_brace = command_part.find('}');
+
+			if (start_brace != std::string::npos && end_brace != std::string::npos && end_brace > start_brace)
+			{
+				// Extract config string: "high, priority, freq, graph, start, end"
+				std::string config_content = command_part.substr(start_brace + 1, end_brace - start_brace - 1);
+				auto config_items = String_Utils::Split(config_content, ',');
+
+				// Map positions to struct based on prompt: 
+				// {high_value_nodes, priority_nodes, frequently_accessed_nodes, graph_X, starting, ending}
+				if (config_items.size() >= 6) {
+					config.m_High_Value_Set = String_Utils::Trim(config_items[0]);
+					config.m_Gateway_Set = String_Utils::Trim(config_items[1]); // Prompt calls this "priority_nodes", typically gateway/secondary
+					config.m_Freq_Set = String_Utils::Trim(config_items[2]);
+					config.m_Target_Graph = String_Utils::Trim(config_items[3]);
+					config.m_Start_Node = String_Utils::Trim(config_items[4]);
+					config.m_End_Node = String_Utils::Trim(config_items[5]);
+				}
+
+				// Parse the rest of the string after '}' as generic structures
+				std::string remainder = command_part.substr(end_brace + 1);
+				auto struct_items = String_Utils::Split(remainder, ',');
+				for (const auto& s : struct_items) {
+					std::string clean = String_Utils::Trim(s);
+					if (!clean.empty()) generic_structures.push_back(clean);
+				}
 			}
-			Run_Full_Analysis(args);
+			else
+			{
+				// Backward compatibility: Treat everything as generic structures
+				// Skip "RUN_FULL_ANALYSIS" token itself (index 0)
+				auto all_params = String_Utils::Split(command_part, ',');
+				for (size_t i = 1; i < all_params.size(); ++i) {
+					generic_structures.push_back(String_Utils::Trim(all_params[i]));
+				}
+			}
+
+			Run_Full_Analysis(config, generic_structures);
 			return;
 		}
+
+		// --- Standard Parsing for other operations ---
+		auto params = String_Utils::Split(command_part, ',');
+		std::string op = String_Utils::To_Upper(String_Utils::Trim(params[0]));
 
 		// figure out what category this operation belongs to for the report
 		std::string category = "";
@@ -744,15 +800,29 @@ private:
 	}
 
 	// runs a full suite of tests on the given objects
-	void Run_Full_Analysis(const std::vector<std::string>& args)
+	void Run_Full_Analysis(const Analysis_Config& config, const std::vector<std::string>& generic_args)
 	{
 		m_Output->Write_Section("FULL SYSTEM ANALYSIS");
 
 		std::vector<std::string> sets, graphs, rels, funcs;
 		Data_Type analysisType = Data_Type::UNKNOWN;
 
-		// categorize inputs by looking them up in the registry
-		for (const auto& name : args) {
+		// 1. Determine Data Type based on Config if present
+		if (config.Has_Config()) {
+			if (!config.m_High_Value_Set.empty() && m_Registry.Exists_Set(config.m_High_Value_Set)) {
+				analysisType = m_Registry.Get_Set_Type(config.m_High_Value_Set);
+			}
+			else if (!config.m_Target_Graph.empty() && m_Registry.Exists_Graph(config.m_Target_Graph)) {
+				// We need to peek inside the graph variant
+				auto& g = m_Registry.m_Graphs[config.m_Target_Graph];
+				if (std::holds_alternative<Graph<int>>(g)) analysisType = Data_Type::INT;
+				else if (std::holds_alternative<Graph<std::string>>(g)) analysisType = Data_Type::STRING;
+				else if (std::holds_alternative<Graph<char>>(g)) analysisType = Data_Type::CHAR;
+			}
+		}
+
+		// 2. Categorize generic inputs
+		for (const auto& name : generic_args) {
 			if (m_Registry.Exists_Set(name)) {
 				sets.push_back(name);
 				if (analysisType == Data_Type::UNKNOWN) analysisType = m_Registry.Get_Set_Type(name);
@@ -773,9 +843,9 @@ private:
 		}
 
 		// dispatch to the correct template instance
-		if (analysisType == Data_Type::INT) Run_Full_Analysis_T<int>(sets, graphs, rels);
-		else if (analysisType == Data_Type::STRING) Run_Full_Analysis_T<std::string>(sets, graphs, rels);
-		else if (analysisType == Data_Type::CHAR) Run_Full_Analysis_T<char>(sets, graphs, rels);
+		if (analysisType == Data_Type::INT) Run_Full_Analysis_T<int>(config, sets, graphs, rels);
+		else if (analysisType == Data_Type::STRING) Run_Full_Analysis_T<std::string>(config, sets, graphs, rels);
+		else if (analysisType == Data_Type::CHAR) Run_Full_Analysis_T<char>(config, sets, graphs, rels);
 		else m_Output->Write_Error("Could not determine data type for analysis or no valid objects provided.");
 
 		if (!funcs.empty()) {
@@ -793,56 +863,81 @@ private:
 	// generic analysis function
 	// this allows us to write the logic once and reuse it for ints, strings, and chars
 	template <typename T>
-	void Run_Full_Analysis_T(const std::vector<std::string>& sets, const std::vector<std::string>& graphs, const std::vector<std::string>& rels)
+	void Run_Full_Analysis_T(const Analysis_Config& config, const std::vector<std::string>& sets, const std::vector<std::string>& graphs, const std::vector<std::string>& rels)
 	{
 		Math_Set<T> priority_nodes;
-		if (sets.size() >= 3) {
-			m_Output->Write_Sub_Section("Set Operations");
-			// safety check
-			if (!std::holds_alternative<Math_Set<T>>(m_Registry.m_Sets[sets[0]])) return;
 
-			// extract sets from variant
+		// --- 1. Config-Driven Analysis (MST, Priority Nodes) ---
+		if (config.Has_Config())
+		{
+			m_Output->Write_Sub_Section("Configuration Analysis");
+
+			// Priority Node Calculation
+			if (!config.m_High_Value_Set.empty() && !config.m_Freq_Set.empty() && !config.m_Gateway_Set.empty())
+			{
+				if (m_Registry.Exists_Set(config.m_High_Value_Set) &&
+					m_Registry.Exists_Set(config.m_Freq_Set) &&
+					m_Registry.Exists_Set(config.m_Gateway_Set))
+				{
+					auto s1 = std::get<Math_Set<T>>(m_Registry.m_Sets[config.m_High_Value_Set]);
+					auto s2 = std::get<Math_Set<T>>(m_Registry.m_Sets[config.m_Freq_Set]);
+					auto s3 = std::get<Math_Set<T>>(m_Registry.m_Sets[config.m_Gateway_Set]);
+
+					// Intersection of High Value and Freq
+					auto intersection = INTERSECTION(s1, s2);
+					// Union with Gateway
+					priority_nodes = UNION(intersection, s3);
+
+					m_Output->Write_Object("PRIORITY_NODES_CALCULATION", priority_nodes);
+				}
+				else {
+					m_Output->Write_Error("One or more config sets not found in registry.");
+				}
+			}
+
+			// Graph Analysis (MST & Shortest Path) on Target Graph
+			if (!config.m_Target_Graph.empty() && m_Registry.Exists_Graph(config.m_Target_Graph))
+			{
+				auto& graph = std::get<Graph<T>>(m_Registry.m_Graphs[config.m_Target_Graph]);
+
+				// Shortest Path
+				if (!config.m_Start_Node.empty() && !config.m_End_Node.empty()) {
+					try {
+						Run_Dijkstra(graph, config.m_Start_Node, config.m_End_Node, config.m_Target_Graph);
+					}
+					catch (...) { m_Output->Write_Error("Shortest Path Failed"); }
+				}
+
+				// MST with Constraints
+				if (!config.m_Start_Node.empty() && priority_nodes.Get_Size() > 0) {
+					auto res = Constrained_Prims_MST<T>::Constrained_Prims_MST_Calculation(graph, priority_nodes, Type_Converter::Parse_Element<T>(config.m_Start_Node));
+					m_Output->Write_Object("MST[" + config.m_Target_Graph + ", Constraints: PriorityNodes]", res);
+				}
+			}
+		}
+		// --- Backward Compatibility for Implicit Sets ---
+		else if (sets.size() >= 3) {
+			m_Output->Write_Sub_Section("Legacy Set Operations");
 			auto s1 = std::get<Math_Set<T>>(m_Registry.m_Sets[sets[0]]);
 			auto s2 = std::get<Math_Set<T>>(m_Registry.m_Sets[sets[1]]);
 			auto s3 = std::get<Math_Set<T>>(m_Registry.m_Sets[sets[2]]);
-
-			// perform operations
 			Math_Set<T> intersection = INTERSECTION(s1, s2);
 			priority_nodes = UNION(intersection, s3);
-
-			m_Output->Write_Object("INTERSECTION[" + sets[0] + ", " + sets[1] + "]", intersection);
 			m_Output->Write_Object("PRIORITY_NODES[" + sets[0] + " n " + sets[1] + " U " + sets[2] + "]", priority_nodes);
 		}
 
+		// --- 2. Generic Structure Analysis (Iterate over the lists) ---
+
 		if (!graphs.empty()) {
-			std::string graphName = graphs[0];
-			if (std::holds_alternative<Graph<T>>(m_Registry.m_Graphs[graphName])) {
-				auto& graph = std::get<Graph<T>>(m_Registry.m_Graphs[graphName]);
-
-				m_Output->Write_Sub_Section("Graph Analysis (" + graphName + ")");
-				m_Output->Write_Info("VERTICES", std::to_string(graph.Get_Num_Vertices()));
-
-				Check_Graph_Props(graph, "COMPLETE", graphName);
-				Check_Graph_Props(graph, "EULERIAN_CIRCUIT", graphName);
-				Check_Graph_Props(graph, "HAMILTONIAN_CYCLE", graphName);
-
-				// attempt shortest path with reasonable defaults
-				try {
-					Run_Dijkstra(graph, "0", "5", graphName);
+			m_Output->Write_Sub_Section("Generic Graph Properties");
+			for (const auto& graphName : graphs) {
+				if (std::holds_alternative<Graph<T>>(m_Registry.m_Graphs[graphName])) {
+					auto& graph = std::get<Graph<T>>(m_Registry.m_Graphs[graphName]);
+					m_Output->Write_Info("VERTICES[" + graphName + "]", std::to_string(graph.Get_Num_Vertices()));
+					Check_Graph_Props(graph, "COMPLETE", graphName);
+					Check_Graph_Props(graph, "EULERIAN_CIRCUIT", graphName);
+					Check_Graph_Props(graph, "HAMILTONIAN_CYCLE", graphName);
 				}
-				catch (...) {}
-
-				if (priority_nodes.Get_Size() > 0) {
-					auto res = Constrained_Prims_MST<T>::Constrained_Prims_MST_Calculation(graph, priority_nodes, Type_Converter::Parse_Element<T>("0"));
-					m_Output->Write_Object("MST[" + graphName + ", Constraints: PriorityNodes]", res);
-				}
-
-				// lambda for checking degree condition
-				auto degreeCheck = [&](T node) {
-					return graph.Get_Degree(node) > 2;
-					};
-				bool res = Single_Quantifier_Validator<T>::Universal_Quantifier(priority_nodes, degreeCheck);
-				m_Output->Write_Property("QUANTIFIER[ALL PriorityNodes, Degree > 2]", res);
 			}
 		}
 

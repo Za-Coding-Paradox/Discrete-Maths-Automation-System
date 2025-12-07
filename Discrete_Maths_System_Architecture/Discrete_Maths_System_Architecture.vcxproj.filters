@@ -46,6 +46,9 @@
     <Filter Include="Source Files\Tests">
       <UniqueIdentifier>{7fe96a72-8a81-4d0f-b680-d3f9068c373d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Report">
+      <UniqueIdentifier>{8f187755-1922-4f31-803d-b8b82acd233f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entry_Point\main.cpp">
@@ -107,6 +110,9 @@
       <Filter>Source Files\Tests</Filter>
     </Text>
     <Text Include="Tests\output_mixed_full.txt">
+      <Filter>Source Files\Tests</Filter>
+    </Text>
+    <Text Include="Tests\mixed_input_full_5.txt">
       <Filter>Source Files\Tests</Filter>
     </Text>
   </ItemGroup>
