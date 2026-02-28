@@ -1,4 +1,4 @@
-# Discrete Mathematics Automation System (DMSA)
+# Discrete Mathematics Automation System (DMAS)
 
 ## Overview
 The **Discrete Mathematics Automation System (DMSA)** is a high-performance C++ engine designed to automate the definition, analysis, and verification of discrete mathematical structures. It provides a rigorous computational environment for checking mathematical properties, conducting logical proofs, and executing complex graph algorithms on user-defined data.
